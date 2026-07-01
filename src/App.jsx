@@ -17,12 +17,23 @@ import { CSS } from '@dnd-kit/utilities'
 import './App.css'
 
 const DEFAULT_SONGS = [
-  { id: '1', title: 'Intro', duration: 90, enabled: true },
-  { id: '2', title: 'First Song', duration: 245, enabled: true },
-  { id: '3', title: 'Second Song', duration: 210, enabled: true },
-  { id: '4', title: 'Slow One', duration: 280, enabled: true },
-  { id: '5', title: 'Crowd Favorite', duration: 195, enabled: true },
-  { id: '6', title: 'Encore', duration: 300, enabled: false },
+  { id: '1', title: 'Jest nas więcej', duration: 204, enabled: true },
+  { id: '2', title: 'Koła czasu', duration: 241, enabled: true },
+  { id: '3', title: 'Drzwi', duration: 278, enabled: true },
+  { id: '4', title: 'Kiedyś do ciebie wrócę', duration: 246, enabled: true },
+  { id: '5', title: 'Znalazłam', duration: 237, enabled: true },
+  { id: '6', title: 'Królowa łez', duration: 290, enabled: true },
+  { id: '7', title: 'Kiedy powiem sobie dość', duration: 250, enabled: true },
+  { id: '8', title: 'Niekochana', duration: 340, enabled: true },
+  { id: '9', title: 'Winna', duration: 260, enabled: true },
+  { id: '10', title: 'Jestem silna', duration: 224, enabled: false },
+  { id: '11', title: 'Najtrudniej', duration: 300, enabled: false },
+  { id: '12', title: 'Nie chcę dawać', duration: 213, enabled: false },
+  { id: '13', title: 'Chylińska', duration: 261, enabled: false },
+  { id: '14', title: 'Kiedy przyjdziesz do mnie', duration: 240, enabled: false },
+  { id: '15', title: 'Drań', duration: 240, enabled: false },
+  { id: '16', title: 'Tu i tam', duration: 199, enabled: false },
+  { id: '17', title: 'To naprawdę już koniec', duration: 258, enabled: false },
 ]
 
 function generateId() {
