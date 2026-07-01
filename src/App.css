@@ -1,0 +1,383 @@
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+/* ── Header ── */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 4px 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.total-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.total-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.total-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: var(--mono);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* ── Settings Card ── */
+
+.settings-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-label {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.setting-value {
+  font-size: 14px;
+  font-family: var(--mono);
+  color: var(--text-bright);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepper button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-bright);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+  padding: 0;
+}
+
+.stepper button:active {
+  background: var(--surface-hover);
+}
+
+.stepper-value {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--text-bright);
+  min-width: 44px;
+  text-align: center;
+}
+
+/* ── Add Song ── */
+
+.add-section {
+  display: flex;
+  gap: 8px;
+}
+
+.add-input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-bright);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.add-input:focus {
+  border-color: var(--accent);
+}
+
+.add-btn {
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.add-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.add-btn:not(:disabled):active {
+  opacity: 0.8;
+}
+
+/* ── Song List ── */
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-dim);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.empty-hint {
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  color: var(--text-dim);
+}
+
+/* ── Song Item ── */
+
+.song-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, opacity 0.2s;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.song-item.disabled {
+  opacity: 0.45;
+}
+
+.drag-handle {
+  cursor: grab;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  touch-action: none;
+  flex-shrink: 0;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle svg {
+  display: block;
+}
+
+/* ── Toggle ── */
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--border);
+  border-radius: 22px;
+  transition: background 0.2s;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggle input:checked + .slider {
+  background: var(--green);
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+/* ── Song Info ── */
+
+.song-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-bright);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.song-title:active {
+  opacity: 0.6;
+}
+
+.title-input {
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  color: var(--text-bright);
+  font-size: 14px;
+  outline: none;
+  font-family: var(--font);
+}
+
+/* ── Duration ── */
+
+.duration-control {
+  flex-shrink: 0;
+}
+
+.duration-text {
+  display: block;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+
+.duration-text:active {
+  background: var(--surface-hover);
+}
+
+.duration-input {
+  width: 60px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  color: var(--text-bright);
+  font-size: 13px;
+  font-family: var(--mono);
+  text-align: center;
+  outline: none;
+}
+
+/* ── Delete ── */
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.delete-btn:active {
+  color: var(--red);
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.delete-btn svg {
+  display: block;
+}
+
+/* ── Footer ── */
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
