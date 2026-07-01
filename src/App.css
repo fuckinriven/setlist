@@ -178,8 +178,10 @@
 .toolbar {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
 }
 
+.share-btn,
 .copy-btn {
   display: flex;
   align-items: center;

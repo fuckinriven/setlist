@@ -17,23 +17,10 @@ import { CSS } from '@dnd-kit/utilities'
 import './App.css'
 
 const DEFAULT_SONGS = [
-  { id: '1', title: 'Jest nas więcej', duration: 204, enabled: true },
-  { id: '2', title: 'Koła czasu', duration: 241, enabled: true },
-  { id: '3', title: 'Drzwi', duration: 278, enabled: true },
-  { id: '4', title: 'Kiedyś do ciebie wrócę', duration: 246, enabled: true },
-  { id: '5', title: 'Znalazłam', duration: 237, enabled: true },
-  { id: '6', title: 'Królowa łez', duration: 290, enabled: true },
-  { id: '7', title: 'Kiedy powiem sobie dość', duration: 250, enabled: true },
-  { id: '8', title: 'Niekochana', duration: 340, enabled: true },
-  { id: '9', title: 'Winna', duration: 260, enabled: true },
-  { id: '10', title: 'Jestem silna', duration: 224, enabled: false },
-  { id: '11', title: 'Najtrudniej', duration: 300, enabled: false },
-  { id: '12', title: 'Nie chcę dawać', duration: 213, enabled: false },
-  { id: '13', title: 'Chylińska', duration: 261, enabled: false },
-  { id: '14', title: 'Kiedy przyjdziesz do mnie', duration: 240, enabled: false },
-  { id: '15', title: 'Drań', duration: 240, enabled: false },
-  { id: '16', title: 'Tu i tam', duration: 199, enabled: false },
-  { id: '17', title: 'To naprawdę już koniec', duration: 258, enabled: false },
+  { id: '1', title: 'Fist song', duration: 204, enabled: true },
+  { id: '2', title: 'Slow one', duration: 241, enabled: false },
+  { id: '3', title: 'Crowd favorite', duration: 278, enabled: true },
+  { id: '4', title: 'Encore', duration: 246, enabled: true },
 ]
 
 function generateId() {
@@ -92,6 +79,44 @@ function durationToString(seconds) {
   const s = seconds % 60
   return `${m}:${String(s).padStart(2, '0')}`
 }
+
+/* ── URL state encoding for sharing ── */
+
+function encodeState(songs, gapTime) {
+  const json = JSON.stringify({ s: songs, g: gapTime })
+  // Encode as UTF-8 first so non-ASCII chars (Polish, etc.) survive btoa
+  const utf8 = unescape(encodeURIComponent(json))
+  return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
+function decodeState(str) {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/')
+  while (base64.length % 4) base64 += '='
+  const utf8 = atob(base64)
+  return JSON.parse(decodeURIComponent(escape(utf8)))
+}
+
+/* Try loading shared state from URL query param & save to localStorage */
+function loadSharedState() {
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const encoded = params.get('d')
+    if (!encoded) return
+    const data = decodeState(encoded)
+    if (data && Array.isArray(data.s)) {
+      window.localStorage.setItem('setlist-songs', JSON.stringify(data.s))
+      if (typeof data.g === 'number') {
+        window.localStorage.setItem('setlist-gap', JSON.stringify(data.g))
+      }
+      // Clean the URL so subsequent refreshes use localStorage normally
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  } catch {
+    // Invalid data param — ignore
+  }
+}
+
+loadSharedState()
 
 function SortableSong({ song, onToggle, onDurationChange, onDelete, onTitleChange }) {
   const {
@@ -269,6 +294,31 @@ function App() {
   }, [newSongTitle, setSongs])
 
   const [copied, setCopied] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
+
+  const handleShare = useCallback(async () => {
+    const data = encodeState(songs, gapTime)
+    const url = `${window.location.origin}${window.location.pathname}?d=${data}`
+
+    // Try native share on mobile
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Setlist', url })
+        return
+      } catch {
+        // User cancelled or API unavailable
+      }
+    }
+
+    // Fallback: copy link to clipboard
+    try {
+      await navigator.clipboard.writeText(url)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    } catch {
+      // Clipboard not available
+    }
+  }, [songs, gapTime])
 
   const handleCopy = useCallback(async () => {
     const enabled = songs.filter((s) => s.enabled)
@@ -334,6 +384,29 @@ function App() {
       </section>
 
       <div className="toolbar">
+        <button
+          className="share-btn"
+          onClick={handleShare}
+        >
+          {linkCopied ? (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 7 6 10 11 4" />
+              </svg>
+              Link copied!
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 5.5a2.5 2.5 0 1 1 2-1.2" />
+                <path d="M9 8.5a2.5 2.5 0 1 1-2 1.2" />
+                <line x1="8" y1="7" x2="6.5" y2="6" />
+                <line x1="8" y1="7" x2="6.5" y2="8" />
+              </svg>
+              Share link
+            </>
+          )}
+        </button>
         <button
           className="copy-btn"
           onClick={handleCopy}
