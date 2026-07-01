@@ -188,7 +188,7 @@ function SortableSong({ song, onToggle, onDurationChange, onDelete, onTitleChang
         )}
       </div>
 
-      <button className="delete-btn" onClick={() => onDelete(song.id)} aria-label="Delete song">
+      <button className="delete-btn" onClick={() => onDelete(song)} aria-label="Delete song">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <line x1="4" y1="4" x2="12" y2="12" />
           <line x1="12" y1="4" x2="4" y2="12" />
@@ -231,9 +231,21 @@ function App() {
     setSongs((prev) => prev.map((s) => (s.id === id ? { ...s, title } : s)))
   }, [setSongs])
 
-  const handleDelete = useCallback((id) => {
-    setSongs((prev) => prev.filter((s) => s.id !== id))
-  }, [setSongs])
+  const [pendingDelete, setPendingDelete] = useState(null)
+
+  const confirmDelete = useCallback(() => {
+    if (!pendingDelete) return
+    setSongs((prev) => prev.filter((s) => s.id !== pendingDelete.id))
+    setPendingDelete(null)
+  }, [pendingDelete, setSongs])
+
+  const cancelDelete = useCallback(() => {
+    setPendingDelete(null)
+  }, [])
+
+  const handleDelete = useCallback((song) => {
+    setPendingDelete(song)
+  }, [])
 
   const handleAdd = useCallback(() => {
     const title = newSongTitle.trim()
@@ -244,6 +256,21 @@ function App() {
     ])
     setNewSongTitle('')
   }, [newSongTitle, setSongs])
+
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = useCallback(async () => {
+    const enabled = songs.filter((s) => s.enabled)
+    if (enabled.length === 0) return
+    const text = enabled.map((s, i) => `${i + 1}. ${s.title}`).join('\n')
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // Clipboard not available
+    }
+  }, [songs])
 
   const enabledCount = useMemo(() => songs.filter((s) => s.enabled).length, [songs])
 
@@ -295,6 +322,31 @@ function App() {
         </button>
       </section>
 
+      <div className="toolbar">
+        <button
+          className="copy-btn"
+          onClick={handleCopy}
+          disabled={enabledCount === 0}
+        >
+          {copied ? (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 7 6 10 11 4" />
+              </svg>
+              Copied!
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="1" width="9" height="10" rx="1.5" />
+                <path d="M11 4h1.5A1.5 1.5 0 0 1 14 5.5v6a1.5 1.5 0 0 1-1.5 1.5h-6A1.5 1.5 0 0 1 5 11.5V10" />
+              </svg>
+              Copy setlist
+            </>
+          )}
+        </button>
+      </div>
+
       <section className="song-list">
         {songs.length === 0 ? (
           <div className="empty-state">
@@ -325,6 +377,24 @@ function App() {
           </DndContext>
         )}
       </section>
+
+      {pendingDelete && (
+        <div className="overlay" onClick={cancelDelete}>
+          <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+            <p className="confirm-text">
+              Delete <strong>{pendingDelete.title}</strong>?
+            </p>
+            <div className="confirm-actions">
+              <button className="confirm-btn cancel" onClick={cancelDelete}>
+                Cancel
+              </button>
+              <button className="confirm-btn delete" onClick={confirmDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="footer">
         <span>{formatTime(totalTime)} total</span>

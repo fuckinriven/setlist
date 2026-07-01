@@ -165,6 +165,42 @@
   opacity: 0.8;
 }
 
+/* ── Toolbar ── */
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.copy-btn:not(:disabled):active {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.copy-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.copy-btn svg {
+  flex-shrink: 0;
+}
+
 /* ── Song List ── */
 
 .song-list {
@@ -368,6 +404,82 @@
 
 .delete-btn svg {
   display: block;
+}
+
+/* ── Delete Confirmation Dialog ── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.confirm-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px 20px;
+  max-width: 300px;
+  width: 100%;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.confirm-text {
+  margin: 0 0 20px;
+  font-size: 16px;
+  color: var(--text-bright);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.confirm-text strong {
+  color: var(--text-bright);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.confirm-btn:active {
+  opacity: 0.7;
+}
+
+.confirm-btn.cancel {
+  background: var(--surface-hover);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.confirm-btn.delete {
+  background: var(--red);
+  color: #fff;
 }
 
 /* ── Footer ── */
