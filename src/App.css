@@ -1,7 +1,7 @@
 .app {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px 16px;
+  padding: 0 16px 20px;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -9,13 +9,21 @@
   width: 100%;
 }
 
-/* ── Header ── */
+/* ── Header (sticky) ── */
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 4px 0;
+  padding: 16px 0 12px;
+  box-shadow: 0 1px 0 var(--border);
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .header h1 {
@@ -238,7 +246,6 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
   transition: border-color 0.15s, opacity 0.2s;
-  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 }
